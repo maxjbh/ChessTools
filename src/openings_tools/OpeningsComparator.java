@@ -4,7 +4,6 @@ import csv_tools.JsonCsvReader;
 import csv_tools.json_parsing.JsonDoubleLiteral;
 import csv_tools.json_parsing.JsonIntegerLiteral;
 import csv_tools.json_parsing.JsonMapLiteralContainer;
-import csv_tools.json_parsing.JsonParseLiteral;
 
 import java.util.List;
 
@@ -24,16 +23,16 @@ public class OpeningsComparator extends JsonCsvReader {
             entry.modifyForIndex(index, line.get(index));
         }
         JsonMapLiteralContainer openingData = new JsonMapLiteralContainer();
-        if(!super.currentJson.containsKey(entry.getTitle())){
+        if(!super.result.mapContainsKey(entry.getTitle())){
             openingData.putInMap(NUMBER_OF_GAMES_KEY, new JsonIntegerLiteral(1));
             openingData.putInMap(WINS_KEY, new JsonIntegerLiteral((entry.getWinState() == OpeningsRecordEntry.WinState.iWon ? 1 : 0)));
             openingData.putInMap(LOSSES_KEY, new JsonIntegerLiteral((entry.getWinState() == OpeningsRecordEntry.WinState.iLost ? 1 : 0)));
             openingData.putInMap(TIMES_OPENING_CAUSED_KEY, new JsonIntegerLiteral((entry.isOpeningCaused() ? 1 : 0)));
             openingData.putInMap(AVERAGE_OPPONENT_RATING_KEY, new JsonDoubleLiteral(entry.getTheirRating()));
             openingData.putInMap(TOTAL_ENEMY_RATING_KEY, new JsonIntegerLiteral(entry.getTheirRating()).setDoPrint(false));
-            super.currentJson.put(entry.getTitle(), openingData);
+            super.result.putInMap(entry.getTitle(), openingData);
         }else{
-            openingData = (JsonMapLiteralContainer) super.currentJson.get(entry.getTitle());
+            openingData = (JsonMapLiteralContainer) super.result.getInMap(entry.getTitle());
             openingData.putInMap(NUMBER_OF_GAMES_KEY, new JsonIntegerLiteral(1 + ((JsonIntegerLiteral)openingData.getInMap(NUMBER_OF_GAMES_KEY)).getValue()));
             if(entry.getWinState() == OpeningsRecordEntry.WinState.iWon){
                 openingData.putInMap(WINS_KEY, new JsonIntegerLiteral(1 + ((JsonIntegerLiteral)openingData.getInMap(WINS_KEY)).getValue()));

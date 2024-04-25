@@ -2,12 +2,12 @@ package csv_tools;
 
 import csv_tools.json_parsing.JsonCsvParseResult;
 import csv_tools.json_parsing.JsonMapLiteralContainer;
-import csv_tools.json_parsing.JsonParseLiteral;
+import csv_tools.json_parsing.OrderBy;
 
 import java.util.*;
 
 public abstract class JsonCsvReader extends CsvReader{
-    protected Map<String, JsonParseLiteral> currentJson = new HashMap<>();
+    protected JsonMapLiteralContainer result = new JsonMapLiteralContainer(new OrderBy());
 
     protected abstract void readLine(List<String> line);
 
@@ -28,6 +28,6 @@ public abstract class JsonCsvReader extends CsvReader{
                 readLine(nextRow);
             }
         }
-        return new JsonCsvParseResult(true, new JsonMapLiteralContainer(currentJson));
+        return new JsonCsvParseResult(true, result);
     }
 }
